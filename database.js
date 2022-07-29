@@ -1,4 +1,5 @@
 const loki = require('lokijs')
+const nanoid = require('nanoid')
 
 const db = new loki('./db.json')
 
@@ -622,6 +623,5 @@ const users = db.addCollection('users')
 const promos = db.addCollection('promos')
 
 users_data.map(user => users.insert(user))
-promos_data.map(promo => promos.insert(promo))
-
+promos_data.map(promo => promos.insert({ key: nanoid(), ...promo }))
 db.saveDatabase()
