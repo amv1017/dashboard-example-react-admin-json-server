@@ -1,7 +1,4 @@
-const loki = require('lokijs')
-const nanoid = require('nanoid')
-
-const db = new loki('./db.json')
+const fs = require('fs')
 
 const users_data = [
   { id: 0, username: 'user_bnalhlaq', password: 'nwng' },      
@@ -619,9 +616,15 @@ const promos_data = [
   }
 ]
 
-const users = db.addCollection('users')
-const promos = db.addCollection('promos')
+const database = {
+  users: users_data,
+  promos: promos_data.map((promo, id) => { return {
+    id,
+    ...promo
+  }})
+}
 
-users_data.map(user => users.insert(user))
-promos_data.map(promo => promos.insert({ key: nanoid(), ...promo }))
-db.saveDatabase()
+fs.writeFile('db.json', JSON.stringify(database), (err) => {
+  if (err) throw err
+  console.log('Data written to file')
+})
